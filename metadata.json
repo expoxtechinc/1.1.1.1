@@ -1,0 +1,6 @@
+{
+  "name": "AkinAI",
+  "description": "An advanced AI-powered assistant app built on Gemini, created by Akin S. Sokpah from Liberia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
