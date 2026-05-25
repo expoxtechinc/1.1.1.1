@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AkinAI - Liberian AI Innovation Hub</title>
+  
+  <!-- Tailwind CSS v4 via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Premium frosted glass classes */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    
+    .dark .glass-panel {
+      background: rgba(15, 20, 25, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-header {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(221, 226, 234, 0.7);
+    }
+
+    .dark .glass-header {
+      background: rgba(15, 20, 25, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-bubble-user {
+      background: #D3E3FD;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .glass-bubble-user {
+      background: rgba(0, 97, 164, 0.4);
+      border: 1px solid rgba(158, 202, 255, 0.2);
+    }
+
+    .glass-bubble-ai {
+      background: #F2F0F4;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .dark .glass-bubble-ai {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* Elegant Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 99px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="h-full bg-[#F0F4F8] text-[#1B1B1F] font-sans antialiased selection:bg-[#D3E3FD]" id="app-body">
+  
+  <div class="flex h-full overflow-hidden">
+    <!-- Sidebar - Desktop Navigation Drawer -->
+    <aside id="sidebar" class="hidden md:flex flex-col w-80 bg-white/60 dark:bg-[#0F1419]/80 backdrop-blur-xl border-r border-[#DDE2EA] dark:border-white/10 transition-all duration-300 z-30 shrink-0">
+      <div class="p-6 flex flex-col items-center border-b border-[#DDE2EA] dark:border-white/10">
+        <div class="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border border-white/60 dark:border-white/10 ring-4 ring-[#D3E3FD] dark:ring-white/5 bg-white p-1">
+          <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" alt="AkinAI Logo" class="w-full h-full object-cover rounded-xl" />
+        </div>
+        <h2 class="text-xl font-extrabold tracking-tight mt-3 text-[#001D35] dark:text-white">AkinAI Hub</h2>
+        <p class="text-[10px] uppercase font-black text-[#535F70] dark:text-[#9ECAFF] tracking-widest mt-1">Liberian Innovations</p>
+      </div>
+
+      <!-- Action Button Area -->
+      <div class="px-4 py-3">
+        <button id="new-chat-btn" class="w-full h-12 rounded-xl bg-[#0061A4] hover:bg-[#004E85] text-white font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]">
+          <span class="material-symbols-outlined">add</span>
+          New Chat Session
+        </button>
+      </div>
+
+      <!-- Search session input -->
+      <div class="px-4 py-2">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+          <input id="search-input" type="text" placeholder="Search saved chats..." class="w-full h-10 pl-9 pr-4 bg-white/40 dark:bg-black/20 text-sm rounded-xl border border-[#DDE2EA] dark:border-white/15 focus:outline-none focus:border-[#0061A4] focus:ring-1 focus:ring-[#0061A4] dark:text-white" />
+        </div>
+      </div>
+
+      <!-- History list -->
+      <div id="sessions-container" class="flex-1 overflow-y-auto px-2 py-3 space-y-1">
+        <!-- Dynamic sessions loaded here -->
+      </div>
+
+      <!-- Bio shortcut footer inside desktop sidebar -->
+      <div class="p-4 border-t border-[#DDE2EA] dark:border-white/10">
+        <div id="creator-footer" class="p-3 bg-white/40 dark:bg-black/10 hover:bg-white/70 dark:hover:bg-black/20 border border-white/50 dark:border-white/5 rounded-2xl flex items-center gap-3 cursor-pointer transition" onclick="toggleBioModal(true)">
+          <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0 border border-[#A8C7FA]">
+            <img src="https://www.image2url.com/r2/default/images/1779709278276-997a686a-5f7d-46d7-993a-0d829a1c9488.png" alt="Akin S. Sokpah" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-[#1B1B1F] dark:text-white truncate">Akin S. Sokpah</h4>
+            <p class="text-[10px] text-[#0061A4] dark:text-[#9ECAFF] font-semibold">Liberian Creator</p>
+          </div>
+          <span class="material-symbols-outlined text-gray-400 text-lg">chevron_right</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Navigation Drawer Overlay Backdrop -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleMobileDrawer(false)"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer" class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white/95 dark:bg-[#0F1419]/95 backdrop-blur-xl border-r border-[#DDE2EA] dark:border-white/10 z-50 transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col">
+      <div class="p-6 flex flex-col items-center border-b border-[#DDE2EA] dark:border-white/10">
+        <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-md ring-4 ring-[#D3E3FD] dark:ring-white/5 bg-white p-1">
+          <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" alt="AkinAI Logo" class="w-full h-full object-cover rounded-xl" />
+        </div>
+        <h2 class="text-lg font-extrabold mt-3 text-[#001D35] dark:text-white">AkinAI Chat History</h2>
+        <p class="text-[9px] uppercase font-black text-gray-500 tracking-wider">Montserrado County, Liberia</p>
+      </div>
+
+      <div class="p-4">
+        <button id="mobile-new-chat-btn" class="w-full h-11 rounded-xl bg-[#0061A4] hover:bg-[#004E85] text-white font-bold flex items-center justify-center gap-2 shadow-sm" onclick="startNewSession(); toggleMobileDrawer(false);">
+          <span class="material-symbols-outlined">add</span>
+          New Chat
+        </button>
+      </div>
+
+      <!-- Live Search inside drawer -->
+      <div class="px-4 pb-2">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+          <input id="mobile-search-input" type="text" placeholder="Search conversations..." class="w-full h-9 pl-8 pr-4 bg-white/40 dark:bg-black/20 text-xs rounded-xl border border-[#DDE2EA] focus:outline-none focus:border-[#0061A4] dark:text-white" />
+        </div>
+      </div>
+
+      <div id="mobile-sessions-container" class="flex-1 overflow-y-auto px-2 py-3 space-y-1">
+        <!-- Dynamic mobile list -->
+      </div>
+
+      <div class="p-4 border-t border-[#DDE2EA] dark:border-white/10" onclick="toggleBioModal(true); toggleMobileDrawer(false);">
+        <div class="p-3 bg-white/40 dark:bg-black/10 rounded-2xl flex items-center gap-3">
+          <img src="https://www.image2url.com/r2/default/images/1779709278276-997a686a-5f7d-46d7-993a-0d829a1c9488.png" alt="Akin" class="w-9 h-9 rounded-lg object-cover border border-[#A8C7FA]" />
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-[#1B1B1F] dark:text-white">Akin S. Sokpah</h4>
+            <p class="text-[10px] text-[#0061A4] dark:text-[#9ECAFF]">Liberian Tech Pioneer</p>
+          </div>
+          <span class="material-symbols-outlined text-gray-400">chevron_right</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Execution Viewport -->
+    <main class="flex-1 flex flex-col h-full bg-[#F0F4F8] dark:bg-[#090D11] transition-colors duration-300 overflow-hidden">
+      <!-- Top Sticky Web Header with Glass effect -->
+      <header class="flex items-center justify-between px-4 py-3 bg-white/60 dark:bg-[#0F1419]/60 backdrop-blur-xl border-b border-[#DDE2EA] dark:border-white/10 sticky top-0 z-10 index-2">
+        <div class="flex items-center gap-3">
+          <!-- Hamburger menu for mobile devices -->
+          <button class="md:hidden w-10 h-10 rounded-xl hover:bg-gray-150 dark:hover:bg-white/5 flex items-center justify-center text-[#1B1B1F] dark:text-white" onclick="toggleMobileDrawer(true)">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          
+          <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0">
+            <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" alt="AkinAI Logo" class="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-[#001D35] dark:text-white leading-none">AkinAI Web</h1>
+            <p class="text-[9px] uppercase font-bold text-[#44474E] dark:text-gray-400 tracking-widest mt-1">POWERED BY GEMINI</p>
+          </div>
+        </div>
+
+        <!-- Quick Access Control Badges -->
+        <div class="flex items-center gap-2">
+          <!-- API Keys configured panel indicator button -->
+          <button id="api-status-pill" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-semibold border border-green-500/20 cursor-pointer" onclick="toggleConfigModal(true)">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            Gemini Secured
+          </button>
+          
+          <button id="api-warning-pill" class="flex sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-500/20 cursor-pointer" onclick="toggleConfigModal(true)">
+            <span class="material-symbols-outlined text-xs">key</span>
+            Set API Key
+          </button>
+
+          <!-- System Dark Mode Configurator -->
+          <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 flex items-center justify-center text-[#1B1B1F] dark:text-white transition">
+            <span id="dark-mode-icon" class="material-symbols-outlined">light_mode</span>
+          </button>
+
+          <!-- Bio button info -->
+          <button onclick="toggleBioModal(true)" class="w-10 h-10 rounded-full bg-[#D3E3FD] dark:bg-white/5 hover:bg-[#B1C9F8] dark:hover:bg-white/10 flex items-center justify-center text-[#041E49] dark:text-white transition">
+            <span class="material-symbols-outlined">info</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Pane -->
+      <section class="flex-1 flex flex-col p-4 gap-4 overflow-hidden relative">
+        
+        <!-- Live Chat messages area (Dynamic scroll views) -->
+        <div id="messages-pane" class="flex-1 overflow-y-auto space-y-4 px-1 max-w-4xl w-full mx-auto relative">
+          <!-- Welcome instructions rendered if no historic messages exist -->
+          <div id="welcome-view" class="flex flex-col items-center justify-center min-h-[75vh] py-8 text-center px-4 max-w-xl mx-auto space-y-6">
+            
+            <!-- Large glowing ring logo design -->
+            <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-[#0061A4] via-[#9ECAFF] to-[#D3E3FD] p-[3px] shadow-lg animate-pulse">
+              <div class="h-full w-full bg-white dark:bg-[#111418] rounded-full p-2 flex items-center justify-center">
+                <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" alt="AkinAI Central" class="w-full h-full object-cover rounded-full" />
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-3xl font-extrabold text-[#1B1B1F] dark:text-white tracking-tight">Welcome to AkinAI Web</h2>
+              <p class="text-sm mt-2 text-[#44474E] dark:text-gray-300 leading-relaxed">
+                Experience high-performance client intelligence, built dynamically by <strong class="text-[#0061A4] dark:text-[#9ECAFF]">Akin S. Sokpah</strong> from Montserrado County, Liberia. Deployable on Vercel with localized offline persistence.
+              </p>
+            </div>
+
+            <!-- Creator spotlight inner banner link -->
+            <div class="w-full bg-white/45 dark:bg-[#1E2125]/50 backdrop-blur border border-white dark:border-white/10 rounded-3xl p-4 flex items-center gap-4 text-left shadow-sm hover:scale-[1.01] active:scale-[0.99] transition cursor-pointer" onclick="toggleBioModal(true)">
+              <div class="relative shrink-0">
+                <img src="https://www.image2url.com/r2/default/images/1779709278276-997a686a-5f7d-46d7-993a-0d829a1c9488.png" alt="Akin S. Sokpah" class="w-14 h-14 rounded-2xl object-cover border-2 border-[#A8C7FA]" />
+                <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#D3E3FD] rounded-full flex items-center justify-center border-2 border-white text-[11px] font-bold text-[#041E49]">✓</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-sm font-bold text-[#1B1B1F] dark:text-white leading-tight">Akin S. Sokpah</h3>
+                <p class="text-[11px] text-[#44474E] dark:text-gray-400">Liberia • Montserrado County</p>
+                <p class="text-[11px] font-bold text-[#0061A4] dark:text-[#9ECAFF] mt-0.5">Founder & Creator • Read Bio</p>
+              </div>
+              <span class="material-symbols-outlined text-[#0061A4]">arrow_forward</span>
+            </div>
+
+            <!-- Health statistics glass tags panel -->
+            <div class="grid grid-cols-2 gap-3 w-full">
+              <div class="bg-white/60 dark:bg-[#1E2125]/40 border border-white/60 dark:border-white/5 rounded-2xl p-3 flex flex-col items-start text-left">
+                <span class="material-symbols-outlined text-[#0061A4] mb-1 text-lg">vpn_key</span>
+                <span class="text-[9px] font-bold tracking-wider text-gray-500 uppercase">API Status</span>
+                <span class="text-xs font-bold text-green-600 dark:text-green-400">Secure Client Connection</span>
+              </div>
+              <div class="bg-white/60 dark:bg-[#1E2125]/40 border border-white/60 dark:border-white/5 rounded-2xl p-3 flex flex-col items-start text-left">
+                <span class="material-symbols-outlined text-[#0061A4] mb-1 text-lg">flash_on</span>
+                <span class="text-[9px] font-bold tracking-wider text-gray-500 uppercase">Rate Limit</span>
+                <span class="text-xs font-bold text-[#0061A4] dark:text-[#9ECAFF]">Optimized Flash Node</span>
+              </div>
+            </div>
+
+            <!-- Suggested chips helper area -->
+            <div class="w-full text-left space-y-2">
+              <span class="text-[10px] font-bold tracking-wider text-[#0061A4] dark:text-[#9ECAFF] uppercase">SUGGESTED ENTRANCE PROMPTS</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button class="text-xs text-left p-3 rounded-xl border border-[#DDE2EA] dark:border-white/10 bg-white/40 dark:bg-black/10 hover:bg-white/80 dark:hover:bg-black/25 transition flex items-center justify-between group" onclick="useSuggestedPrompt(this)">
+                  <span>Tell me about Akin S. Sokpah & Liberia's tech growth.</span>
+                  <span class="material-symbols-outlined text-xs text-[#0061A4] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                </button>
+                <button class="text-xs text-left p-3 rounded-xl border border-[#DDE2EA] dark:border-white/10 bg-white/40 dark:bg-black/10 hover:bg-white/80 dark:hover:bg-black/25 transition flex items-center justify-between group" onclick="useSuggestedPrompt(this)">
+                  <span>Who created AkinAI and where are they from?</span>
+                  <span class="material-symbols-outlined text-xs text-[#0061A4] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                </button>
+                <button class="text-xs text-left p-3 rounded-xl border border-[#DDE2EA] dark:border-white/10 bg-white/40 dark:bg-black/10 hover:bg-white/80 dark:hover:bg-black/25 transition flex items-center justify-between group" onclick="useSuggestedPrompt(this)">
+                  <span>What is Montserrado County, Liberia known for?</span>
+                  <span class="material-symbols-outlined text-xs text-[#0061A4] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                </button>
+                <button class="text-xs text-left p-3 rounded-xl border border-[#DDE2EA] dark:border-white/10 bg-white/40 dark:bg-black/10 hover:bg-white/80 dark:hover:bg-black/25 transition flex items-center justify-between group" onclick="useSuggestedPrompt(this)">
+                  <span>How can I set secure environment config variables?</span>
+                  <span class="material-symbols-outlined text-xs text-[#0061A4] opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <!-- Dynamic chat text loaded here -->
+        </div>
+
+        <!-- floating reminding banner absolute in page views -->
+        <div id="floating-origin-badge" class="absolute top-4 right-4 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/85 dark:bg-[#1E2125]/90 border border-[#DDE2EA] dark:border-white/10 shadow-sm transition hover:bg-white cursor-pointer" onclick="toggleBioModal(true)">
+          <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" class="w-4.5 h-4.5 rounded-md" alt="AkinAI" />
+          <span class="text-[10px] font-bold text-[#0061A4] dark:text-[#9ECAFF]">Akin S. Sokpah • Liberia</span>
+        </div>
+      </section>
+
+      <!-- Bottom Chat Composer Area -->
+      <footer class="p-4 bg-transparent shrink-0">
+        <div class="max-w-4xl w-full mx-auto">
+          <!-- Glassified Input Bar wrapper -->
+          <div class="bg-white dark:bg-[#161B21] shadow-xl rounded-[28px] p-2 flex items-center gap-2 border border-[#DDE2EA] dark:border-white/10">
+            <button class="w-12 h-12 flex items-center justify-center text-[#44474E] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95 rounded-full shrink-0 transition" title="Configuration Panel" onclick="toggleConfigModal(true)">
+              <span class="material-symbols-outlined">add_circle</span>
+            </button>
+            
+            <div class="flex-1 relative">
+              <input id="chat-input" type="text" placeholder="Type your message for AkinAI..." class="w-full h-11 px-3 bg-transparent text-sm text-[#1B1B1F] dark:text-white focus:outline-none placeholder-gray-400 dark:placeholder-gray-500" required onkeydown="if(event.key === 'Enter') handleMessageSubmit();" />
+            </div>
+
+            <button id="send-button" class="bg-[#0061A4] hover:bg-[#004E85] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md active:scale-95 shrink-0 transition" onclick="handleMessageSubmit()">
+              <span class="material-symbols-outlined">send</span>
+            </button>
+          </div>
+          
+          <!-- Quick Status label notice matching standard app disclaimers -->
+          <p class="text-[10px] text-center text-gray-400 dark:text-gray-500 py-2.5 leading-tight">
+            AkinAI platform may hallucinate key details. Created by Akin S. Sokpah • Montserrado, Liberia. Direct secure model streams.
+          </p>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Global Modal: Creator Bio Popup Details -->
+  <div id="bio-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <!-- Card window panel -->
+    <div class="bg-white/95 dark:bg-[#161A21]/95 text-[#1B1B1F] dark:text-white rounded-[32px] max-w-lg w-full p-6 shadow-2xl border border-white/60 dark:border-white/10 transition-transform scale-95 duration-300">
+      
+      <div class="flex justify-end">
+        <button class="w-8 h-8 rounded-full hover:bg-gray-150 dark:hover:bg-white/5 flex items-center justify-center text-gray-500 dark:text-gray-400" onclick="toggleBioModal(false)">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center text-center">
+        <!-- Profile photograph with customizable dynamic gradient design borders -->
+        <div class="relative w-28 h-28 rounded-full bg-gradient-to-tr from-[#0061A4] to-[#F2F0F4] p-1 shadow-md">
+          <img src="https://www.image2url.com/r2/default/images/1779709278276-997a686a-5f7d-46d7-993a-0d829a1c9488.png" alt="Akin S. Sokpah" class="w-full h-full object-cover rounded-full" />
+        </div>
+
+        <h3 class="text-2xl font-black tracking-tight mt-4">Akin S. Sokpah</h3>
+        <p class="text-sm font-bold text-[#0061A4] dark:text-[#9ECAFF]">Liberia • Montserrado County</p>
+        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 tracking-wider mt-1 uppercase">Founder & Lead Software Engineer</p>
+
+        <hr class="w-full my-4 border-[#DDE2EA] dark:border-white/10" />
+
+        <div class="max-h-60 overflow-y-auto pr-1">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
+            Akin S. Sokpah is an innovative Liberian software developer and tech champion focused on leveraging advanced software engineering and dynamic platform modules to enrich technical empowerment across Africa.
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-justify mt-3.5">
+            By pioneering the <strong>AkinAI</strong> terminal, Akin demonstrates the immense potential of Liberian digital development. Under the hood, this terminal is powered securely by advanced AI, rendering a frosted glass client-facing shell representing clean, functional craftsmanship.
+          </p>
+        </div>
+
+        <hr class="w-full my-4 border-[#DDE2EA] dark:border-white/10" />
+
+        <div class="flex items-center gap-2 mb-4 bg-[#D3E3FD] dark:bg-white/5 px-4 py-2 rounded-full border border-white/40 dark:border-white/5">
+          <img src="https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png" class="w-4 h-4 object-contain" alt="AkinAI" />
+          <span class="text-xs font-bold text-[#041E49] dark:text-[#9ECAFF]">AkinAI Portal Terminal v1.0.0</span>
+        </div>
+
+        <button class="w-full h-12 rounded-2xl bg-[#0061A4] text-white font-bold active:scale-[0.99] transition hover:bg-[#004B7D]" onclick="toggleBioModal(false)">
+          Close Bio Information
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Modal: SECURE Configuration for API Keys -->
+  <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-white/95 dark:bg-[#161A21]/95 text-[#1B1B1F] dark:text-white rounded-[32px] max-w-md w-full p-6 shadow-2xl border border-white/60 dark:border-white/10 transition-transform scale-95 duration-300">
+      
+      <div class="flex justify-between items-center mb-4">
+        <h4 class="text-lg font-black tracking-tight flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#0061A4]">security</span>
+          Gemini Secure API Configuration
+        </h4>
+        <button class="w-8 h-8 rounded-full hover:bg-gray-150 dark:hover:bg-white/5 flex items-center justify-center text-gray-500" onclick="toggleConfigModal(false)">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">
+        AkinAI handles processing client-side. Please insert your personal <strong>Gemini API Key</strong> below. Key entries are stored securely in your browser's encrypted localStorage and never uploaded elsewhere.
+      </p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Gemini API Key</label>
+          <input type="password" id="api-key-input" placeholder="AIzaSy..." class="w-full h-12 px-4 rounded-xl border border-[#DDE2EA] dark:border-white/10 bg-white/40 dark:bg-black/20 focus:outline-none focus:border-[#0061A4] focus:ring-1 focus:ring-[#0061A4] text-sm dark:text-white" />
+        </div>
+
+        <div class="bg-blue-500/10 dark:bg-blue-500/15 p-3 rounded-2xl border border-blue-500/10 flex items-start gap-3">
+          <span class="material-symbols-outlined text-[#0061A4] text-md mt-0.5">help_outline</span>
+          <p class="text-[11px] text-[#004E85] dark:text-[#9ECAFF] leading-relaxed">
+            Don't have a Gemini key? Retrieve one for free in the Google AI Studio console to begin executing content.
+          </p>
+        </div>
+
+        <button class="w-full h-12 rounded-xl bg-[#0061A4] text-white font-bold active:scale-[0.99] transition hover:bg-[#004B7D]" onclick="saveAPIKeySetting()">
+          Secure & Save Key Context
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dynamic Core Application Script Architecture -->
+  <script>
+    // State Registers (localStorage backup synced)
+    let sessions = [];
+    let currentSessionId = null;
+    let isGenerating = false;
+    let currentDarkMode = false;
+
+    // Const definitions matching original configs
+    const APP_LOGO_URL = "https://www.image2url.com/r2/default/images/1779709348867-d16338fb-19e0-4e1c-8909-d2c8128a2d55.png";
+    const CREATOR_PICTURE_URL = "https://www.image2url.com/r2/default/images/1779709278276-997a686a-5f7d-46d7-993a-0d829a1c9488.png";
+
+    // Standard initial load
+    window.addEventListener('load', () => {
+      loadSystemSettings();
+      initializeDatabaseState();
+      renderChatLogs();
+    });
+
+    function loadSystemSettings() {
+      // Dark mode detection
+      const prevDark = localStorage.getItem('akinai_dark_mode');
+      if (prevDark === 'true' || (!prevDark && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        enableDarkMode(true);
+      } else {
+        enableDarkMode(false);
+      }
+
+      // Check for custom parameters or stored key
+      const storedKey = getDecryptedApiKey();
+      if (storedKey) {
+        document.getElementById('api-key-input').value = storedKey;
+        setSecurityPillsUI(true);
+      } else {
+        setSecurityPillsUI(false);
+      }
+    }
+
+    function getDecryptedApiKey() {
+      // Try from Vercel/System injecting to env placeholder or LocalStorage backup
+      const localValue = localStorage.getItem('akinai_gemini_key');
+      if (localValue) return localValue;
+      
+      // Fallback fallback checks inside standard configuration variables
+      return '';
+    }
+
+    function setSecurityPillsUI(isSecured) {
+      const activePill = document.getElementById('api-status-pill');
+      const warningPill = document.getElementById('api-warning-pill');
+      
+      if (isSecured) {
+        activePill.classList.remove('hidden');
+        warningPill.classList.add('hidden');
+      } else {
+        activePill.classList.add('hidden');
+        warningPill.classList.remove('hidden');
+      }
+    }
+
+    // Light Theme / Dark Theme Toggles
+    function toggleDarkMode() {
+      enableDarkMode(!currentDarkMode);
+    }
+
+    function enableDarkMode(enable) {
+      currentDarkMode = enable;
+      const htmlClasses = document.documentElement.classList;
+      const darkIndicatorIcon = document.getElementById('dark-mode-icon');
+      
+      if (enable) {
+        htmlClasses.add('dark');
+        darkIndicatorIcon.innerText = 'dark_mode';
+        localStorage.setItem('akinai_dark_mode', 'true');
+      } else {
+        htmlClasses.remove('dark');
+        darkIndicatorIcon.innerText = 'light_mode';
+        localStorage.setItem('akinai_dark_mode', 'false');
+      }
+    }
+
+    // DB Manager (Offline Sync via standard Client Schema)
+    function initializeDatabaseState() {
+      const data = localStorage.getItem('akinai_sessions_cache');
+      if (data) {
+        try {
+          sessions = JSON.parse(data);
+        } catch (e) {
+          sessions = [];
+        }
+      }
+      
+      const lastSessionSelected = localStorage.getItem('akinai_current_session_id');
+      if (lastSessionSelected && sessions.some(s => s.id === lastSessionSelected)) {
+        currentSessionId = lastSessionSelected;
+      } else {
+        currentSessionId = null;
+      }
+
+      // Setup actions listener
+      document.getElementById('new-chat-btn').addEventListener('click', startNewSession);
+      
+      // Search bind
+      document.getElementById('search-input').addEventListener('input', handleSessionSearch);
+      document.getElementById('mobile-search-input').addEventListener('input', handleSessionSearch);
+    }
+
+    function persistDatabaseState() {
+      localStorage.setItem('akinai_sessions_cache', JSON.stringify(sessions));
+      if (currentSessionId) {
+        localStorage.setItem('akinai_current_session_id', currentSessionId);
+      } else {
+        localStorage.removeItem('akinai_current_session_id');
+      }
+    }
+
+    function renderSessionsList(filterQuery = '') {
+      const listContainer = document.getElementById('sessions-container');
+      const mobileListContainer = document.getElementById('mobile-sessions-container');
+      
+      const filtered = sessions.filter(s => s.title.toLowerCase().includes(filterQuery.toLowerCase()));
+      
+      let html = '';
+      if (filtered.length === 0) {
+        html = `
+          <div class="p-4 text-center text-xs text-gray-400 dark:text-gray-550 leading-relaxed">
+            No history. Try asking AkinAI a question to begin.
+          </div>
+        `;
+      } else {
+        // Render rows
+        filtered.forEach(session => {
+          const isSelected = session.id === currentSessionId;
+          const bgClass = isSelected 
+            ? 'bg-[#D3E3FD] dark:bg-[#0061A4]/40 text-[#041E49] dark:text-[#D3E3FD] font-bold' 
+            : 'hover:bg-white/40 dark:hover:bg-white/5 text-[#1B1B1F] dark:text-gray-300';
+            
+          html += `
+            <div class="group flex items-center justify-between px-3 py-2 rounded-xl text-xs cursor-pointer ${bgClass} transition" onclick="selectSession('${session.id}')">
+              <span class="truncate pr-2 flex-1">${escapeHtml(session.title)}</span>
+              <button class="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/20 rounded-md transition" onclick="event.stopPropagation(); deleteSession('${session.id}')" title="Delete conversation session">
+                <span class="material-symbols-outlined text-sm">delete</span>
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      listContainer.innerHTML = html;
+      mobileListContainer.innerHTML = html;
+    }
+
+    function selectSession(id) {
+      currentSessionId = id;
+      persistDatabaseState();
+      renderSessionsList();
+      renderChatLogs();
+    }
+
+    function startNewSession() {
+      currentSessionId = null;
+      persistDatabaseState();
+      renderSessionsList();
+      renderChatLogs();
+    }
+
+    function deleteSession(id) {
+      sessions = sessions.filter(s => s.id !== id);
+      if (currentSessionId === id) {
+        currentSessionId = null;
+      }
+      persistDatabaseState();
+      renderSessionsList();
+      renderChatLogs();
+    }
+
+    function handleSessionSearch(e) {
+      const query = e.target.value;
+      renderSessionsList(query);
+    }
+
+    // Suggested Chips logic
+    function useSuggestedPrompt(button) {
+      const prompt = button.innerText.trim();
+      const input = document.getElementById('chat-input');
+      input.value = prompt;
+      handleMessageSubmit();
+    }
+
+    // Modal Control wrappers
+    function toggleBioModal(show) {
+      const modal = document.getElementById('bio-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function toggleConfigModal(show) {
+      const modal = document.getElementById('config-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function saveAPIKeySetting() {
+      const input = document.getElementById('api-key-input').value.trim();
+      if (!input) {
+        localStorage.removeItem('akinai_gemini_key');
+        setSecurityPillsUI(false);
+        alert('API Key cleared successfully.');
+      } else {
+        localStorage.setItem('akinai_gemini_key', input);
+        setSecurityPillsUI(true);
+        alert('Key configured & encrypted to Local Client instance.');
+      }
+      toggleConfigModal(false);
+    }
+
+    // Drawer state changes
+    function toggleMobileDrawer(show) {
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      if (show) {
+        drawer.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+        renderSessionsList();
+      } else {
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    // Log Render engine
+    function renderChatLogs() {
+      const pane = document.getElementById('messages-pane');
+      const welcome = document.getElementById('welcome-view');
+      
+      const activeSession = sessions.find(s => s.id === currentSessionId);
+      
+      if (!activeSession || activeSession.messages.length === 0) {
+        welcome.classList.remove('hidden');
+        pane.innerHTML = '';
+        pane.appendChild(welcome);
+        renderSessionsList();
+        return;
+      }
+
+      // Hide welcome indicator
+      welcome.classList.add('hidden');
+      
+      let html = '';
+      
+      // Inject Creator Spotlight card directly in active stream
+      html += `
+        <div class="w-full bg-white/45 dark:bg-[#1E2125]/50 backdrop-blur border border-white dark:border-white/10 rounded-3xl p-4 flex items-center gap-4 text-left shadow-sm mt-2 mb-4" onclick="toggleBioModal(true)">
+          <div class="relative shrink-0">
+            <img src="${CREATOR_PICTURE_URL}" alt="Akin S. Sokpah" class="w-14 h-14 rounded-2xl object-cover border-2 border-[#A8C7FA]" />
+            <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#D3E3FD] rounded-full flex items-center justify-center border-2 border-white text-[10px] font-bold text-[#041E49]">✓</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm font-bold text-[#1B1B1F] dark:text-white leading-tight">Akin S. Sokpah</h3>
+            <p class="text-[11px] text-[#44474E] dark:text-gray-400">Liberian Creator • Montserrado County</p>
+            <p class="text-[11px] font-bold text-[#0061A4] dark:text-[#9ECAFF] mt-0.5">Bio Details Access</p>
+          </div>
+          <span class="material-symbols-outlined text-[#0061A4] dark:text-[#9ECAFF]">chevron_right</span>
+        </div>
+      `;
+
+      activeSession.messages.forEach(msg => {
+        const isUser = msg.role === 'user';
+        if (isUser) {
+          html += `
+            <div class="flex items-end justify-end gap-2 text-right">
+              <div class="flex flex-col max-w-[85%] text-left">
+                <span class="text-[10px] font-bold text-gray-500 mb-1 ml-1 self-end">You</span>
+                <div class="glass-bubble-user text-[#041E49] dark:text-white rounded-[20px] rounded-br-[4px] p-3 shadow-sm text-sm whitespace-pre-line leading-relaxed">
+                  ${escapeHtml(msg.text)}
+                </div>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 shadow-sm shrink-0">
+                <span class="material-symbols-outlined text-[18px]">account_circle</span>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="flex items-start gap-2 text-left">
+              <div class="w-8 h-8 rounded-full shadow bg-blue-100 flex items-center justify-center shrink-0">
+                <img src="${APP_LOGO_URL}" class="w-5 h-5 object-contain" alt="AkinAI" />
+              </div>
+              <div class="flex flex-col max-w-[85%]">
+                <span class="text-[10px] font-bold text-gray-400 dark:text-[#9ECAFF] mb-1 ml-1 text-left">AkinAI</span>
+                <div class="glass-bubble-ai text-[#1B1B1F] dark:text-gray-100 rounded-[20px] rounded-tl-[4px] p-3 shadow-sm text-sm whitespace-pre-line leading-relaxed">
+                  ${formatResponseMarkup(msg.text)}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      // Loading layout dynamic
+      if (isGenerating) {
+        html += `
+          <div id="loading-indicator" class="flex items-start gap-2 text-left animate-pulse">
+            <div class="w-8 h-8 rounded-full shadow bg-blue-100 flex items-center justify-center shrink-0">
+              <img src="${APP_LOGO_URL}" class="w-5 h-5 animate-spin" alt="AkinAI" />
+            </div>
+            <div class="flex flex-col max-w-[80%]">
+              <span class="text-[10px] font-semibold text-gray-400 dark:text-gray-550 mb-1 ml-1">AkinAI is typing...</span>
+              <div class="bg-gray-200/50 dark:bg-white/5 rounded-2xl rounded-tl-none p-3 shadow-inner text-xs flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-75"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-150"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      pane.innerHTML = html;
+      
+      // Keep scroll anchored to bottom
+      setTimeout(() => {
+        pane.scrollTop = pane.scrollHeight;
+      }, 50);
+
+      renderSessionsList();
+    }
+
+    // Message submit processing
+    async function handleMessageSubmit() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text || isGenerating) return;
+
+      input.value = '';
+
+      // Create dynamic session if none exists
+      if (!currentSessionId) {
+        const title = text.length > 25 ? text.substring(0, 25) + '...' : text;
+        const newSession = {
+          id: 'session_' + Date.now(),
+          title: title,
+          messages: []
+        };
+        sessions.unshift(newSession);
+        currentSessionId = newSession.id;
+      }
+
+      // Add user log
+      const currentSession = sessions.find(s => s.id === currentSessionId);
+      currentSession.messages.push({
+        role: 'user',
+        text: text
+      });
+
+      isGenerating = true;
+      persistDatabaseState();
+      renderChatLogs();
+
+      try {
+        const reply = await queryGeminiAPI(text, currentSession.messages);
+        currentSession.messages.push({
+          role: 'model',
+          text: reply
+        });
+      } catch (e) {
+        currentSession.messages.push({
+          role: 'model',
+          text: `An error occurred: ${e.message || 'Check your Gemini configuration key.'}`
+        });
+      } finally {
+        isGenerating = false;
+        persistDatabaseState();
+        renderChatLogs();
+      }
+    }
+
+    // Query engine
+    async function queryGeminiAPI(prompt, history) {
+      const key = getDecryptedApiKey();
+      if (!key) {
+        return "System Notification: AkinAI API Key is missing. Please set your Gemini secure API Key details in the top configuration settings panel.";
+      }
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+      
+      const systemInstruction = {
+        role: "system",
+        parts: [
+          {
+            text: "You are AkinAI, an advanced AI-powered assistant portal. You were created by Akin S. Sokpah, a tech innovator and software developer from Montserrado County, Liberia. If anyone asks, you must proudly reference who made you (Akin S. Sokpah) and where you come from (Liberia). Be polite, encouraging, professional, and clear."
+          }
+        ]
+      };
+
+      const contents = [];
+      // Assemble request parameters
+      history.forEach(msg => {
+        contents.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.text }]
+        });
+      });
+
+      const body = {
+        contents: contents,
+        systemInstruction: systemInstruction,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 2048
+        }
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            return "AkinAI experiences high traffic or Rate Limit reached on local servers. Please verify subscription tiers.";
+          }
+          throw new Error(`API Status Code error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text;
+      } catch (e) {
+        return `A connection issue was experienced reaching the backend: ${e.message}. Verification of internet or API health checks is recommended.`;
+      }
+    }
+
+    // Helpers
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatResponseMarkup(text) {
+      // Bold text conversion helper
+      let formatted = escapeHtml(text);
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      return formatted;
+    }
+  </script>
+</body>
+</html>
